@@ -3,10 +3,19 @@
         <div class="container">
             <AppRow title="Назначения сеанса гемодиализа">
                 <AppButton>HD</AppButton>
-                <AppButton>HD</AppButton>
-                <AppButton>HD</AppButton>
-                <AppInput placeholder="Спр. 'Диализаторы'"/>
-                <AppSelect title="Препараты" placeholder="Спр. 'Препараты'"/>
+                <AppButton>HDF</AppButton>
+                <AppButton>UF</AppButton>
+            </AppRow>
+            <AppRow>
+                <AppSelect title="Диализатор" placeholder="Спр. 'Диализаторы'"/>
+            </AppRow>
+            <AppRow>
+                <AppSelect title="Концентратор" placeholder="Спр. 'Концентраторы'" disabled="true"/>
+                <AppInput title="Объем" placeholder="10 л" width="8rem" readonly/>
+            </AppRow>
+            <AppRow title="Тип инъекции">
+                <AppButton>Игла</AppButton>
+                <AppButton>Катетер</AppButton>
             </AppRow>
         </div>
     </section>

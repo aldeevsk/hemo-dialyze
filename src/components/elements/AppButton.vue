@@ -1,11 +1,13 @@
 <template>
-    <button class="button">
+    <button class="button" :disabled="props.disabled">
         <slot></slot>
     </button>
 </template>
 
 <script setup lang="ts">
-
+const props = defineProps<{
+    disabled?: any
+}>()
 </script>
 
 <style scoped>
@@ -17,12 +19,15 @@
     border-radius: var(--radius-sm);
     cursor: pointer;
 }
-.button:hover {
+.button:hover:not(:disabled) {
     border-color: rgb(var(--accent));
     color: rgb(var(--accent));
 }
-.button:active, .button.active {
+.button:active:not(:disabled), .button.active:not(:disabled) {
     background: rgb(var(--accent));
     color: rgb(var(--light));
+}
+.button:disabled {
+    opacity: 0.3;
 }
 </style>
