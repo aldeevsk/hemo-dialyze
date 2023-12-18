@@ -1,15 +1,19 @@
 import { ref } from 'vue'
-import type { IDialyzeForm } from "./dialyze.form"
+import { type IDialyzeForm, dialyzeFormEmpty } from './dialyze.form'
 
-
-interface IAppointmentSchema {
-    patient: {id: number, fullname: string} | undefined
-    doctor: {id: number, fullname: string} | undefined
-    dialyze: IDialyzeForm | undefined
+interface IUser {
+    id: number
+    fullname: string
 }
 
-export const appointmentForm = ref<IAppointmentSchema>({
-    patient: undefined,
-    doctor: undefined,
-    dialyze: undefined,
-})
+export interface IAppointmentSchema {
+    patient: IUser | undefined
+    doctor: IUser | undefined
+    dialyze: IDialyzeForm
+}
+
+export const appointmentForm: IAppointmentSchema = {
+  patient: undefined,
+  doctor: undefined,
+  dialyze: dialyzeFormEmpty
+}

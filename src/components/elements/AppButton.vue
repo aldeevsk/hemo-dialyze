@@ -26,6 +26,7 @@ const props = defineProps<{
 .button:active:not(:disabled), .button.active:not(:disabled) {
     background: rgb(var(--accent));
     color: rgb(var(--light));
+    border-color: rgb(var(--accent));
 }
 .button:disabled {
     opacity: 0.3;

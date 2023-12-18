@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import type { ISchema } from '../schemas/schema'
 import type { IMedicationSchema } from '../schemas/medication.schema'
 
@@ -14,7 +13,7 @@ export interface IDialyzeForm {
   anticoagulant: IMedicationSchema | undefined
 }
 
-export const dialyzeFormEmpty = ref<IDialyzeForm>({
+export const dialyzeFormEmpty: IDialyzeForm = {
   program: undefined,
   dialyzer: undefined,
   concentrator: undefined,
@@ -24,8 +23,8 @@ export const dialyzeFormEmpty = ref<IDialyzeForm>({
   bicarbonate: undefined,
   patientWeight: undefined,
   anticoagulant: undefined,
-})
-
-export function setDialyzeFormProp<K extends keyof IDialyzeForm>(key: K, newValue: IDialyzeForm[K]): void {
-    dialyzeFormEmpty.value[key] = newValue
 }
+
+// export function setDialyzeFormProp<K extends keyof IDialyzeForm>(key: K, newValue: IDialyzeForm[K]): void {
+//     dialyzeFormEmpty.value[key] = newValue
+// }
