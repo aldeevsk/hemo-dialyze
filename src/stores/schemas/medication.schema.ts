@@ -9,5 +9,6 @@ export interface IMedicationSchema extends ISchema {
     volume: number
     unit: string
     dosage: number
+    groupSlug: string
     categorySlug: string
 }

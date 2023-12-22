@@ -26,6 +26,7 @@ const props = defineProps<{
 }
 .row__body {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--gap-sm);
     align-items: end;
 }

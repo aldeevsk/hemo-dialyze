@@ -2,13 +2,18 @@
     <div class="select">
         <strong v-if="props.title" class="select__title">{{ props.title }}</strong>
         <div class="select__body">
-            <AppInput :placeholder="props.placeholder" @change="change" :disabled="props.disabled"/>
+            <AppInput :placeholder="props.placeholder" :value="props.value" @change="change" :disabled="props.disabled"/>
             <AppButton :disabled="props.disabled" @click="modal = true">
                 <IconMenu/>
             </AppButton>
         </div>
     </div>
-    <AppSelectModal v-if="modal" @click-on-close="modal = false" :category="{id: 1, slug: 'dialyzer', label: 'Диализаторы'}" :options="[]"/>
+    <AppSelectModal
+        v-if="modal" @click-on-close="modal = false"
+        :category="props.category"
+        :options="props.options"
+        @select-option="(category, option) => emit('selectOption', category, option)"
+    />
 </template>
 
 <script setup lang="ts">
@@ -16,17 +21,25 @@ import { ref } from 'vue'
 import AppSelectModal from './AppSelectModal.vue'
 import { AppInput, AppButton } from '@/components/elements'
 import { IconMenu } from '@/components/icons'
+import { type ICategorySchema } from '@/stores/schemas/category.schema'
+import { type ISchema } from '@/stores/schemas/schema'
+
 
 const props = defineProps<{
     title?: string
     placeholder?: string
     disabled?: any
+    category: ICategorySchema
+    options: ISchema[]
+    value?: string
 }>()
+
 
 const modal = ref<boolean>(false)
 
 const emit = defineEmits<{
-    change: [value: string]
+    change: [value: string],
+    selectOption: [category: string, option: string]
 }>()
 
 function change(event: Event): void {

@@ -2,16 +2,23 @@
     <div class="select-modal">
         <div class="select-modal__content">
             <div class="select-modal__header">
-                <h3 class="select-modal__title">{{ props.category.label }}</h3>
+                <h3 class="select-modal__title">{{ props.category?.label }}</h3>
                 <AppButton @click="emit('clickOnClose')">Закрыть</AppButton>
             </div>
             <div class="select-modal__body">
                 <div class="select-modal__option"
                     v-for="option in props.options"
                     :key="option.id"
-                    @click="emit('selectOption', category.slug, option.slug)"
                 >
-                    {{ option.label }}
+                    <span class="select-modal__optionlabel">{{ option.label }}</span>
+                    <AppButton class="select-modal__option-button"><IconDelete/></AppButton>
+                    <AppButton
+                        class="select-modal__option-button"
+                        :class="{'active': selectedOption === option.slug}"
+                        @click="selectOption(option.slug)"
+                    >
+                        <IconAngleRight/>
+                    </AppButton>
             </div>
             </div>
         </div>
@@ -19,8 +26,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { AppButton } from '..'
 import type { ISchema } from '@/stores/schemas/schema'
+import { IconDelete, IconAngleRight } from '@/components/icons'
 
 const props = defineProps<{
     category: ISchema
@@ -31,11 +40,20 @@ const emit = defineEmits<{
     clickOnClose: [],
     selectOption: [category: ISchema['slug'], option: ISchema['slug']]
 }>()
+
+const selectedOption = ref<string>()
+
+function selectOption(optionSlug: string) {
+    selectedOption.value = optionSlug
+    emit('selectOption', props.category.slug, optionSlug)
+}
 </script>
+
 
 <style scoped>
 .select-modal {
     position: fixed;
+    z-index: 10;
     top: 0;
     left: 0;
     width: 100%;
@@ -47,6 +65,8 @@ const emit = defineEmits<{
 }
 .select-modal__content {
     width: min(50rem, calc(100vw - 50px));
+    display: grid;
+    gap: var(--gap-sm);
     background: rgb(var(--light));
     padding: var(--gap-sm);
 }
@@ -54,7 +74,52 @@ const emit = defineEmits<{
     display: grid;
     gap: var(--gap-sm);
 }
-.select-modal .button {
+.select-modal__header .button {
     justify-self: start;
+}
+
+.select-modal__body {
+    border: var(--border);
+}
+.select-modal__option {
+    height: var(--el-h);
+    display: flex;
+    align-items: center;
+    padding-left: var(--gap-sm);
+}
+.select-modal__option:not(:last-child) {
+    border-bottom: var(--border);
+}
+.select-modal__optionlabel {
+    flex-grow: 1;
+    text-wrap: nowrap;
+    text-overflow: clip;
+}
+.select-modal__option-button, .select-modal__option-button:hover, .select-modal__option-button:active {
+    border: none;
+    border-color: var(--dark);
+    border-radius: 0;
+    padding: 0 var(--gap-sm);
+}
+.select-modal__option-button:last-child {
+    border-left: var(--border);
+}
+.select-modal__option-button:hover .icon-angle-right {
+    stroke: rgb(var(--accent));
+}
+.select-modal__option-button:hover .icon-delete {
+    fill: rgb(var(--accent));
+}
+.select-modal__option-button:active .icon-angle-right {
+    stroke: rgb(var(--light));
+}
+.select-modal__option-button:active .icon-delete {
+    fill: rgb(var(--light));
+}
+.select-modal__option-button.active {
+    background: rgb(var(--accent));
+}
+.select-modal__option-button.active .icon-angle-right {
+    stroke: rgb(var(--light));
 }
 </style>

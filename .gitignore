@@ -28,3 +28,5 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+./src/_mockdata/drafts
