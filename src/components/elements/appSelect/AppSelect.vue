@@ -14,7 +14,7 @@
     </div>
   </div>
   <AppSelectModal
-    v-if="modal"
+    v-if="modalVisibility"
     @click-on-close="modalVisibility = false"
     :modal="props.modal"
     :options="optionsList"
