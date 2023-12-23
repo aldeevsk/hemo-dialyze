@@ -1,0 +1,51 @@
+<template>
+    <div class="board">
+        <span class="board__title">Назначения сеанса гемодиализа</span>
+        <div class="board__body">
+            <span class="board__item"><IconMonitor/> {{ props.program || 'Программа'}}</span>
+            <span class="board__item"><IconDialyzer/> {{ props.dialyler || 'Диализатор' }}</span>
+            <span class="board__item"><IconConcentrator/> {{ props.concentrator || 'Концентратор объем' }}</span>
+            <span class="board__item"><IconInject/> {{ props.injectionType || 'Тип иньекции' }}</span>
+            <span class="board__item"><IconLab/> {{ props.bicarbonate || 'Бикарбонат мл' }}</span>
+            <span class="board__item"><IconLab/> {{ props.anticoagulant || 'Антикоагуляция ед.' }}</span>
+            <span class="board__item"><IconWeight/> {{ props.weight || 'Сухой вес' }}</span>
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { IconMonitor, IconDialyzer, IconLab, IconConcentrator, IconWeight, IconInject } from '@/components/icons'
+
+const props = defineProps<{
+    program?: string
+    dialyler?: string
+    concentrator?: string
+    injectionType?: string
+    bicarbonate?: string
+    anticoagulant?: string
+    weight?: string
+}>()
+</script>
+
+<style scoped>
+.board {
+    display: grid;
+    gap: var(--gap-sm);
+    border: var(--border);
+    padding: var(--gap-sm);
+}
+.board__title {
+    font-size: var(--font-md);
+}
+.board__body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-sm);
+}
+.board__item {
+    min-width: 8rem;
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+}
+</style>

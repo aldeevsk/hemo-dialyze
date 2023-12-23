@@ -1,6 +1,6 @@
 <template>
   <main>
-    <DialyzeSection/>
+    <DialyzeSection />
   </main>
 </template>
 

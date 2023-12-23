@@ -1,5 +1,5 @@
 import DialyzeSection from './dialyze/DialyzeSection.vue'
-import AfterSessionSection from './after-session/AfterSessionSection.vue'
-import HomeTreatmentSection from './home-treatment/HomeTreatmentSection.vue'
+import RecipesSection from './recipes/RecipesSection.vue'
+import AthomeSection from './athome/AthomeSection.vue'
 
-export { DialyzeSection, AfterSessionSection, HomeTreatmentSection }
+export { DialyzeSection, RecipesSection, AthomeSection }

@@ -5,8 +5,8 @@
         <AppButton
           v-for="program in formOptions.programs"
           :key="program.id"
-          :class="{ active: dialyzeForm.program?.slug === program.slug }"
-          @click="setDialyzeFormProp('program', 'programs', program.slug)"
+          :class="{ active: form.program?.slug === program.slug }"
+          @click="setFormProp('program', 'programs', program.slug)"
         >
           {{ program.label }}
         </AppButton>
@@ -15,30 +15,40 @@
         <AppSelect
           title="Диализатор"
           placeholder="Спр. 'Диализаторы'"
-          :category="formOptions.categories.dialyzers"
-          :options="toISchema(formOptions.dialyzers)"
-          @selectOption="(key, option) => setDialyzeFormProp('dialyzer', 'dialyzers', option)"
+          :modal="formOptions.categories.dialyzer"
+          :options="{substore: 'devices', listKey: 'dialyzers'}"
+          @selectOption="(key, option) => setFormProp('dialyzer', 'dialyzers', option)"
         />
       </AppRow>
       <AppRow>
         <AppSelect
           title="Концентратор"
           placeholder="Спр. 'Концентраторы'"
-          :category="formOptions.categories.concentrators"
-          :options="formOptions.concentrators"
-          :value="dialyzeForm.concentrator?.label"
+          :modal="formOptions.categories.concentrator"
+          :options="{substore: 'devices', listKey: 'concentrators'}"
+          :value="form.concentrator?.label"
           @selectOption="
-            (key, option) => setDialyzeFormProp('concentrator', 'concentrators', option)
+            (key, option) => setFormProp('concentrator', 'concentrators', option)
           "
         />
-        <AppInput title="Объем" placeholder="10 л" width="8rem" :value="dialyzeForm.concentrator ? String(dialyzeForm.concentrator.volume) + dialyzeForm.concentrator.unit : undefined" readonly />
+        <AppInput
+          title="Объем"
+          placeholder="10 л"
+          width="8rem"
+          :value="
+            form.concentrator
+              ? String(form.concentrator.volume) + form.concentrator.unit
+              : undefined
+          "
+          readonly
+        />
       </AppRow>
       <AppRow title="Тип инъекции">
         <AppButton
           v-for="injType in formOptions.injectionTypes"
           :key="injType.id"
-          :class="{ active: dialyzeForm.injectionType?.slug === injType.slug }"
-          @click="setDialyzeFormProp('injectionType', 'injectionTypes', injType.slug)"
+          :class="{ active: form.injectionType?.slug === injType.slug }"
+          @click="setFormProp('injectionType', 'injectionTypes', injType.slug)"
         >
           {{ injType.label }}
         </AppButton>
@@ -46,49 +56,59 @@
       <AppRow>
         <AppSelect
           placeholder="Спр. 'Иглы'"
-          :disabled="dialyzeForm.injectionType?.slug != 'needle'"
-          :category="formOptions.categories.needles"
-          :options="formOptions.needles"
+          :disabled="form.injectionType?.slug != 'needle'"
+          :modal="formOptions.categories.needle"
+          :options="{substore: 'devices', listKey: 'dialyzers'}"
         />
         <AppSelect
           placeholder="Спр. 'Типы игл'"
-          :disabled="dialyzeForm.injectionType?.slug != 'needle'"
-          :category="formOptions.categories.needleTypes"
-          :options="formOptions.needleTypes"
+          :disabled="form.injectionType?.slug != 'needle'"
+          :modal="formOptions.categories.needleType"
+          :options="{substore: 'devices', listKey: 'dialyzers'}"
         />
       </AppRow>
       <AppRow>
         <AppSelect
           placeholder="Спр. 'Катетеры'"
-          :disabled="dialyzeForm.injectionType?.slug != 'catheter'"
-          :category="formOptions.categories.catheters"
-          :options="formOptions.dialyzers"
+          :disabled="form.injectionType?.slug != 'catheter'"
+          :modal="formOptions.categories.catheter"
+          :options="{substore: 'devices', listKey: 'dialyzers'}"
         />
         <AppSelect
           placeholder="Спр. 'Типы катетеров'"
-          :disabled="dialyzeForm.injectionType?.slug != 'catheter'"
-          :category="formOptions.categories.catheterTypes"
-          :options="formOptions.dialyzers"
+          :disabled="form.injectionType?.slug != 'catheter'"
+          :modal="formOptions.categories.catheterType"
+          :options="{substore: 'devices', listKey: 'dialyzers'}"
         />
       </AppRow>
       <AppRow>
         <AppSelect
           title="Бикарбонат"
           placeholder="XXX гр/л"
-          :category="formOptions.categories.dialyzers"
-          :options="formOptions.dialyzers"
+          :modal="formOptions.categories.dialyzer"
+          :options="{substore: 'devices', listKey: 'dialyzers'}"
         />
         <AppInput title="Сухой вес пациента" placeholder="XXX кг" width="8rem" />
         <AppSelect
           title="Антикоагуляция"
           placeholder="Наименование"
-          :category="formOptions.categories.dialyzers"
-          :options="formOptions.dialyzers"
+          :modal="formOptions.categories.dialyzer"
+          :options="{substore: 'devices', listKey: 'dialyzers'}"
         />
         <AppInput width="8rem" title="Объем" placeholder="XXX ед." readonly />
       </AppRow>
       <AppRow>
-        <AppButton>Сформировать сеанс</AppButton>
+        <AppButton @click="getSelectOptions('devices', 'concentrators')">Сформировать сеанс</AppButton>
+      </AppRow>
+      <AppRow>
+        <DialyzeBoard
+          :program="form.program?.label"
+          :dialyler="form.dialyzer?.label"
+          :concentrator="form.concentrator?.volume.toString()"
+          :injectionType="form.injectionType?.label"
+          :bicarbonate="form.bicarbonate?.label"
+          :weight="form.patientWeight?.toString()"
+        />
       </AppRow>
     </div>
   </section>
@@ -98,42 +118,44 @@
 import { ref } from 'vue'
 import { AppRow } from '@/components/blocks'
 import { AppButton, AppInput, AppSelect } from '@/components/elements'
-import { useAppointmentStore } from '@/stores/appointment.store'
-import { type IDialyzeForm } from '@/stores/forms/dialyze.form'
+import DialyzeBoard from './DialyzeBoard.vue'
+import { useStore } from '@/stores'
 import {
+  type IDialyzeForm,
   type IDialyzeFormOptions,
   dialyzeFormOptions
-} from '@/stores/formOptions/dialyze.formOptions'
+} from '@/stores/forms/'
+import { getOptions } from '@/stores/forms/form.options'
 
-const appointmentStore = useAppointmentStore()
+const store = useStore()
 
 const formOptions = ref<IDialyzeFormOptions>(dialyzeFormOptions)
 
-const dialyzeForm = ref<IDialyzeForm>(appointmentStore.getProp('dialyze'))
+const form = ref<IDialyzeForm>(store.forms.get('dialyze'))
 
-/* function setDialyzeFormProp<K extends keyof IDialyzeForm>(key: K, newValue: IDialyzeForm[K]): void {
-    dialyzeForm.value[key] = newValue
-    console.log(dialyzeForm.value[key])
-    appointmentStore.setProp('dialyze', dialyzeForm.value)
-} */
 
-function setDialyzeFormProp<K extends keyof IDialyzeForm>(
-  key: K,
+function setFormProp<K extends keyof IDialyzeForm>(
+  formProp: K,
   optionName: keyof Omit<IDialyzeFormOptions, 'categories'>,
   optionSlug: string
 ): void {
-  const newValue = formOptions.value[optionName].find((o) => o.slug === optionSlug) as IDialyzeForm[K]
+  const newValue = formOptions.value[optionName].find(
+    (o) => o.slug === optionSlug
+  ) as IDialyzeForm[K]
   if (!newValue) return
-  dialyzeForm.value[key] = newValue
-  console.log(dialyzeForm.value[key])
-  appointmentStore.setProp('dialyze', dialyzeForm.value)
+  form.value[formProp] = newValue
+  // store.forms.setFormProp('dialyze', optionSlug, newValue)
+  // console.log(form.value[formProp])
+  console.log(store.forms.get('dialyze'))
+  // appointmentStore.setProp('dialyze', dialyzeForm.value)
 }
 
-function toISchema<T extends ISchema>(schemas: T[]): ISchema[] {
-  return schemas.map((schema) => {
-    return { id: schema['id'], slug: schema['slug'], label: schema['label'] }
-  })
+function getSelectOptions(substore: keyof ReturnType<typeof useStore>, key: string) {
+  const options = getOptions(store, substore, key)
+  console.log('[getSelectOptions]: ', options)
+  return options
 }
+
 </script>
 
 <style scoped></style>

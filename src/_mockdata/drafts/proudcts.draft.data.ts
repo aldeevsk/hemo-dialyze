@@ -1,13 +1,13 @@
 interface ISchema {
-    id: number
-    slug: string
-    label: string
+  id: number
+  slug: string
+  label: string
 }
 
 interface ICategorySchema extends ISchema {}
 
 interface IProductSchema extends ISchema {
-    categorySlug: string
+  categorySlug: string
 }
 
 // interface IMedicationSchema extends IProductSchema {
@@ -21,5 +21,3 @@ interface IProductSchema extends ISchema {
 // interface IDeviceSchema extends IProductSchema {
 //     categorySlug: 'device'
 // }
-
-

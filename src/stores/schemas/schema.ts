@@ -1,5 +1,5 @@
 export interface ISchema {
-    id: number // unique, pk
-    slug: string // unique
-    label: string
+  id: number // unique, pk
+  slug: string // unique
+  label: string
 }

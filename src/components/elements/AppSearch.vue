@@ -1,13 +1,7 @@
 <template>
-    <div class="search">
-
-    </div>
+  <div class="search"></div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

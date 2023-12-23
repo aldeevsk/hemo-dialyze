@@ -12,16 +12,16 @@ import IconWeight from './IconWeight.vue'
 import IconDoctor from './IconDoctor.vue'
 
 export {
-    IconMenu,
-    IconLoupe,
-    IconPlus,
-    IconDelete,
-    IconAngleRight,
-    IconMonitor,
-    IconDialyzer,
-    IconConcentrator,
-    IconInject,
-    IconLab,
-    IconWeight,
-    IconDoctor
+  IconMenu,
+  IconLoupe,
+  IconPlus,
+  IconDelete,
+  IconAngleRight,
+  IconMonitor,
+  IconDialyzer,
+  IconConcentrator,
+  IconInject,
+  IconLab,
+  IconWeight,
+  IconDoctor
 }

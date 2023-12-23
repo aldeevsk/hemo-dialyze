@@ -1,28 +1,25 @@
 <template>
-    <div class="select-modal">
-        <div class="select-modal__content">
-            <div class="select-modal__header">
-                <h3 class="select-modal__title">{{ props.category?.label }}</h3>
-                <AppButton @click="emit('clickOnClose')">Закрыть</AppButton>
-            </div>
-            <div class="select-modal__body">
-                <div class="select-modal__option"
-                    v-for="option in props.options"
-                    :key="option.id"
-                >
-                    <span class="select-modal__optionlabel">{{ option.label }}</span>
-                    <AppButton class="select-modal__option-button"><IconDelete/></AppButton>
-                    <AppButton
-                        class="select-modal__option-button"
-                        :class="{'active': selectedOption === option.slug}"
-                        @click="selectOption(option.slug)"
-                    >
-                        <IconAngleRight/>
-                    </AppButton>
-            </div>
-            </div>
+  <div class="select-modal">
+    <div class="select-modal__content">
+      <div class="select-modal__header">
+        <h3 class="select-modal__title">{{ props.modal?.label }}</h3>
+        <AppButton @click="emit('clickOnClose')">Закрыть</AppButton>
+      </div>
+      <div class="select-modal__body">
+        <div class="select-modal__option" v-for="option in props.options" :key="option.id">
+          <span class="select-modal__optionlabel">{{ option.label }}</span>
+          <AppButton class="select-modal__option-button"><IconDelete /></AppButton>
+          <AppButton
+            class="select-modal__option-button"
+            :class="{ active: selectedOption === option.slug }"
+            @click="selectOption(option.slug)"
+          >
+            <IconAngleRight />
+          </AppButton>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -32,94 +29,95 @@ import type { ISchema } from '@/stores/schemas/schema'
 import { IconDelete, IconAngleRight } from '@/components/icons'
 
 const props = defineProps<{
-    category: ISchema
-    options: ISchema[]
+  modal: ISchema
+  options: ISchema[]
 }>()
 
 const emit = defineEmits<{
-    clickOnClose: [],
-    selectOption: [category: ISchema['slug'], option: ISchema['slug']]
+  clickOnClose: []
+  selectOption: [category: ISchema['slug'], option: ISchema['slug']]
 }>()
 
 const selectedOption = ref<string>()
 
 function selectOption(optionSlug: string) {
-    selectedOption.value = optionSlug
-    emit('selectOption', props.category.slug, optionSlug)
+  selectedOption.value = optionSlug
+  emit('selectOption', props.modal.slug, optionSlug)
 }
 </script>
 
-
 <style scoped>
 .select-modal {
-    position: fixed;
-    z-index: 10;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(var(--dark), 0.3);
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(var(--dark), 0.3);
 }
 .select-modal__content {
-    width: min(50rem, calc(100vw - 50px));
-    display: grid;
-    gap: var(--gap-sm);
-    background: rgb(var(--light));
-    padding: var(--gap-sm);
+  width: min(50rem, calc(100vw - 50px));
+  display: grid;
+  gap: var(--gap-sm);
+  background: rgb(var(--light));
+  padding: var(--gap-sm);
 }
 .select-modal__header {
-    display: grid;
-    gap: var(--gap-sm);
+  display: grid;
+  gap: var(--gap-sm);
 }
 .select-modal__header .button {
-    justify-self: start;
+  justify-self: start;
 }
 
 .select-modal__body {
-    border: var(--border);
+  border: var(--border);
 }
 .select-modal__option {
-    height: var(--el-h);
-    display: flex;
-    align-items: center;
-    padding-left: var(--gap-sm);
+  height: var(--el-h);
+  display: flex;
+  align-items: center;
+  padding-left: var(--gap-sm);
 }
 .select-modal__option:not(:last-child) {
-    border-bottom: var(--border);
+  border-bottom: var(--border);
 }
 .select-modal__optionlabel {
-    flex-grow: 1;
-    text-wrap: nowrap;
-    text-overflow: clip;
+  flex-grow: 1;
+  text-wrap: nowrap;
+  text-overflow: clip;
 }
-.select-modal__option-button, .select-modal__option-button:hover, .select-modal__option-button:active {
-    border: none;
-    border-color: var(--dark);
-    border-radius: 0;
-    padding: 0 var(--gap-sm);
+.select-modal__option-button,
+.select-modal__option-button:hover,
+.select-modal__option-button:active {
+  border: none;
+  border-color: var(--dark);
+  border-radius: 0;
+  padding: 0 var(--gap-sm);
 }
 .select-modal__option-button:last-child {
-    border-left: var(--border);
+  border-left: var(--border);
 }
 .select-modal__option-button:hover .icon-angle-right {
-    stroke: rgb(var(--accent));
+  stroke: rgb(var(--accent));
 }
 .select-modal__option-button:hover .icon-delete {
-    fill: rgb(var(--accent));
+  fill: rgb(var(--accent));
 }
 .select-modal__option-button:active .icon-angle-right {
-    stroke: rgb(var(--light));
+  stroke: rgb(var(--light));
 }
 .select-modal__option-button:active .icon-delete {
-    fill: rgb(var(--light));
+  fill: rgb(var(--light));
 }
 .select-modal__option-button.active {
-    background: rgb(var(--accent));
+  background: rgb(var(--accent));
 }
 .select-modal__option-button.active .icon-angle-right {
-    stroke: rgb(var(--light));
+  stroke: rgb(var(--light));
 }
 </style>
