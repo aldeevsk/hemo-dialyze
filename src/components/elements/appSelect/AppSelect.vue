@@ -5,7 +5,7 @@
       <AppInput
         :placeholder="props.placeholder"
         :value="props.value"
-        @change="change"
+        @change="(value) =>change"
         :disabled="props.disabled"
       />
       <AppButton :disabled="props.disabled" @click="setOptions()">
@@ -16,9 +16,10 @@
   <AppSelectModal
     v-if="modalVisibility"
     @click-on-close="modalVisibility = false"
-    :modal="props.modal"
+    :title="props.modal.title"
     :options="optionsList"
-    @select-option="(category, option) => emit('selectOption', category, option)"
+    @selectOption="(option) => emit('selectOption', option)"
+    @removeOption="(id) => removeOption(id)"
   />
 </template>
 
@@ -27,27 +28,28 @@ import { ref } from 'vue'
 import AppSelectModal from './AppSelectModal.vue'
 import { AppInput, AppButton } from '@/components/elements'
 import { IconMenu } from '@/components/icons'
-import { type ISchema } from '@/stores/schemas/schema'
-import { getOptions } from '@/stores/forms/form.options'
+import { type TUnionSchema } from '@/stores/schemas'
 import { useStore } from '@/stores'
+import { type IFormOptions, getOptions } from '@/stores/forms/form.options'
+
 
 const props = defineProps<{
   title?: string
   placeholder?: string
   disabled?: any
-  modal: ISchema
-  options: {
-    substore: keyof ReturnType<typeof useStore>,
-    listKey: string
-  }
   value?: string
+  modal: {
+    title: string
+    subForm: keyof IFormOptions
+    prop: keyof IFormOptions[keyof IFormOptions] | unknown
+  }
 }>()
 
 const modalVisibility = ref<boolean>(false)
 
 const emit = defineEmits<{
   change: [value: string]
-  selectOption: [category: string, option: string]
+  selectOption: [option: TUnionSchema]
 }>()
 
 function change(event: Event): void {
@@ -59,12 +61,14 @@ const optionsList = ref<ISchema[]>([])
 
 const store = useStore()
 
-function setOptions() {
-  const options = getOptions(store, props.options.substore, props.options.listKey) || []
+async function setOptions() {
+  const prop = props.modal.prop as keyof IFormOptions[keyof IFormOptions]
+  const options = await getOptions(store, props.modal.subForm, prop)
   optionsList.value = options
-  console.log('[getSelectOptions]: ', options)
   modalVisibility.value = true
-  return options
+}
+function removeOption(id: number) {
+  optionsList.value = optionsList.value.filter(o => o.id !== id)
 }
 </script>
 

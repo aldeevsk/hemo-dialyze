@@ -2,13 +2,13 @@
     <div class="board">
         <span class="board__title">Назначения сеанса гемодиализа</span>
         <div class="board__body">
-            <span class="board__item"><IconMonitor/> {{ props.program || 'Программа'}}</span>
-            <span class="board__item"><IconDialyzer/> {{ props.dialyler || 'Диализатор' }}</span>
-            <span class="board__item"><IconConcentrator/> {{ props.concentrator || 'Концентратор объем' }}</span>
-            <span class="board__item"><IconInject/> {{ props.injectionType || 'Тип иньекции' }}</span>
-            <span class="board__item"><IconLab/> {{ props.bicarbonate || 'Бикарбонат мл' }}</span>
-            <span class="board__item"><IconLab/> {{ props.anticoagulant || 'Антикоагуляция ед.' }}</span>
-            <span class="board__item"><IconWeight/> {{ props.weight || 'Сухой вес' }}</span>
+            <span class="board__item"><IconMonitor/> {{ props.isReady && props.program || 'Программа'}}</span>
+            <span class="board__item"><IconDialyzer/> {{ props.isReady && props.dialyler || 'Диализатор' }}</span>
+            <span class="board__item"><IconConcentrator/> {{ props.isReady && props.concentrator || 'Концентратор объем' }}</span>
+            <span class="board__item"><IconInject/> {{ props.isReady && props.injectionType || 'Тип иньекции' }}</span>
+            <span class="board__item"><IconLab/> {{ props.isReady && props.bicarbonate ? props.bicarbonate + ' мл' : 'Бикарбонат мл' }}</span>
+            <span class="board__item"><IconLab/> {{ props.isReady && props.anticoagulant ? props.anticoagulant + ' ед' : 'Антикоагуляция ед.' }}</span>
+            <span class="board__item"><IconWeight/> {{ props.isReady && props.weight ? props.weight + ' кг'  : 'Сухой вес' }}</span>
         </div>
     </div>
 </template>
@@ -24,6 +24,7 @@ const props = defineProps<{
     bicarbonate?: string
     anticoagulant?: string
     weight?: string
+    isReady: boolean
 }>()
 </script>
 

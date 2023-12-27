@@ -11,6 +11,7 @@
       :required="props.required"
       :readonly="props.readonly"
       :disabled="props.disabled"
+      @change="emitChange"
     />
   </div>
 </template>
@@ -28,6 +29,15 @@ const props = defineProps<{
   width?: string
   disabled?: any
 }>()
+
+const emit = defineEmits<{
+  change: [value: string]
+}>()
+
+function emitChange(event: Event): void {
+  const target = event.target as HTMLInputElement
+  emit('change', target.value)
+}
 </script>
 
 <style scoped>

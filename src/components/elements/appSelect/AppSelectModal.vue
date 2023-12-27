@@ -2,21 +2,24 @@
   <div class="select-modal">
     <div class="select-modal__content">
       <div class="select-modal__header">
-        <h3 class="select-modal__title">{{ props.modal?.label }}</h3>
+        <h3 class="select-modal__title">{{ props.title }}</h3>
         <AppButton @click="emit('clickOnClose')">Закрыть</AppButton>
       </div>
-      <div class="select-modal__body">
+      <div class="select-modal__body" v-if="props.options.length">
         <div class="select-modal__option" v-for="option in props.options" :key="option.id">
           <span class="select-modal__optionlabel">{{ option.label }}</span>
-          <AppButton class="select-modal__option-button"><IconDelete /></AppButton>
+          <AppButton class="select-modal__option-button" @click="emit('removeOption', option.id)"><IconDelete /></AppButton>
           <AppButton
             class="select-modal__option-button"
             :class="{ active: selectedOption === option.slug }"
-            @click="selectOption(option.slug)"
+            @click="selectOption(option)"
           >
             <IconAngleRight />
           </AppButton>
         </div>
+      </div>
+      <div class="select-modal__body" v-else>
+        <strong class="select-modal__option">Этот раздел пуст</strong>
       </div>
     </div>
   </div>
@@ -25,24 +28,25 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { AppButton } from '..'
-import type { ISchema } from '@/stores/schemas/schema'
+import type { TUnionSchema } from '@/stores/schemas'
 import { IconDelete, IconAngleRight } from '@/components/icons'
 
 const props = defineProps<{
-  modal: ISchema
+  title: string
   options: ISchema[]
 }>()
 
 const emit = defineEmits<{
   clickOnClose: []
-  selectOption: [category: ISchema['slug'], option: ISchema['slug']]
+  selectOption: [option: TUnionSchema]
+  removeOption: [id: number]
 }>()
 
 const selectedOption = ref<string>()
 
-function selectOption(optionSlug: string) {
-  selectedOption.value = optionSlug
-  emit('selectOption', props.modal.slug, optionSlug)
+function selectOption(option: TUnionSchema) {
+  selectedOption.value = option.slug
+  emit('selectOption', option)
 }
 </script>
 

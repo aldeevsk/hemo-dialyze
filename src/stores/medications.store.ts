@@ -11,13 +11,8 @@ export const useMedicationsStore = defineStore('medications', () => {
     return medications.value
   }
 
-  function filterBy<K extends keyof IMedicationSchema>({
-    key,
-    value
-  }: {
-    key: K
-    value: IMedicationSchema[K]
-  }) {
+  function filterBy<K extends keyof IMedicationSchema>({ key, value }: { key: K, value: IMedicationSchema[K] }) {
+    if(!medications.value.length) fetchData()
     return medications.value.filter((m) => m[key] === value)
   }
 

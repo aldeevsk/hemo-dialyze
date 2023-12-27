@@ -6,7 +6,7 @@
           v-for="program in formOptions.programs"
           :key="program.id"
           :class="{ active: form.program?.slug === program.slug }"
-          @click="setFormProp('program', 'programs', program.slug)"
+          @click="setFormProp('program', program)"
         >
           {{ program.label }}
         </AppButton>
@@ -15,25 +15,24 @@
         <AppSelect
           title="Диализатор"
           placeholder="Спр. 'Диализаторы'"
-          :modal="formOptions.categories.dialyzer"
-          :options="{substore: 'devices', listKey: 'dialyzers'}"
-          @selectOption="(key, option) => setFormProp('dialyzer', 'dialyzers', option)"
+          :value="form.dialyzer?.label"
+          :modal="{title: 'Диализаторы', subForm: 'dialyze', prop: 'dialyzers'}"
+          @selectOption="(option) => setFormProp('dialyzer', option)"
         />
       </AppRow>
       <AppRow>
         <AppSelect
           title="Концентратор"
           placeholder="Спр. 'Концентраторы'"
-          :modal="formOptions.categories.concentrator"
-          :options="{substore: 'devices', listKey: 'concentrators'}"
+          :modal="{title: 'Концентраторы', subForm: 'dialyze', prop: 'concentrators'}"
           :value="form.concentrator?.label"
           @selectOption="
-            (key, option) => setFormProp('concentrator', 'concentrators', option)
+            (option) => setFormProp('concentrator', option as IMedicationSchema)
           "
         />
         <AppInput
           title="Объем"
-          placeholder="10 л"
+          placeholder="XX л."
           width="8rem"
           :value="
             form.concentrator
@@ -48,7 +47,7 @@
           v-for="injType in formOptions.injectionTypes"
           :key="injType.id"
           :class="{ active: form.injectionType?.slug === injType.slug }"
-          @click="setFormProp('injectionType', 'injectionTypes', injType.slug)"
+          @click="setFormProp('injectionType', injType, resetInjectionProps)"
         >
           {{ injType.label }}
         </AppButton>
@@ -56,49 +55,60 @@
       <AppRow>
         <AppSelect
           placeholder="Спр. 'Иглы'"
+          :value="form.injector?.label"
           :disabled="form.injectionType?.slug != 'needle'"
-          :modal="formOptions.categories.needle"
-          :options="{substore: 'devices', listKey: 'dialyzers'}"
+          :modal="{title: 'Иглы', subForm: 'dialyze', prop: 'needles'}"
+          @selectOption="(option) => setFormProp('injector', option as IDeviceSchema)"
         />
         <AppSelect
           placeholder="Спр. 'Типы игл'"
+          :value="form.injectionType?.slug === 'needle' ? form.injectorType?.label : undefined"
           :disabled="form.injectionType?.slug != 'needle'"
-          :modal="formOptions.categories.needleType"
+          :modal="{title: 'Типы игл', subForm: 'dialyze', prop: 'needleTypes'}"
           :options="{substore: 'devices', listKey: 'dialyzers'}"
+          @selectOption="(option) => setFormProp('injectorType', option)"
         />
       </AppRow>
       <AppRow>
         <AppSelect
           placeholder="Спр. 'Катетеры'"
+          :value="form.injectionType?.slug === 'catheter' ? form.injector?.label : undefined"
           :disabled="form.injectionType?.slug != 'catheter'"
-          :modal="formOptions.categories.catheter"
+          :modal="{title: 'Катетеры', subForm: 'dialyze', prop: 'catheters'}"
           :options="{substore: 'devices', listKey: 'dialyzers'}"
+          @selectOption="(option) => setFormProp('injector', option as IDeviceSchema)"
         />
         <AppSelect
           placeholder="Спр. 'Типы катетеров'"
+          :value="form.injectionType?.slug === 'catheter' ? form.injectorType?.label : undefined"
           :disabled="form.injectionType?.slug != 'catheter'"
-          :modal="formOptions.categories.catheterType"
+          :modal="{title: 'Типы катетеров', subForm: 'dialyze', prop: 'catheterTypes'}"
           :options="{substore: 'devices', listKey: 'dialyzers'}"
+          @selectOption="(option) => setFormProp('injectorType', option)"
         />
       </AppRow>
       <AppRow>
         <AppSelect
           title="Бикарбонат"
           placeholder="XXX гр/л"
-          :modal="formOptions.categories.dialyzer"
+          :value="form.bicarbonate ? form.bicarbonate?.label + ' - ' + String(form.bicarbonate?.volume) + form.bicarbonate?.unit : 'XXX гр/л'"
+          :modal="{title: 'Бикарбонаты', subForm: 'dialyze', prop: 'bicarbonates'}"
           :options="{substore: 'devices', listKey: 'dialyzers'}"
+          @selectOption="(option) => setFormProp('bicarbonate', option as IMedicationSchema)"
         />
-        <AppInput title="Сухой вес пациента" placeholder="XXX кг" width="8rem" />
+        <AppInput title="Сухой вес пациента" placeholder="XXX кг" width="8rem" @change="(value) => setFormProp('patientWeight', Number(value))" />
         <AppSelect
           title="Антикоагуляция"
           placeholder="Наименование"
-          :modal="formOptions.categories.dialyzer"
+          :value="form.anticoagulant?.label"
+          :modal="{title: 'Антикоагуляция', subForm: 'dialyze', prop: 'anticoagulants'}"
           :options="{substore: 'devices', listKey: 'dialyzers'}"
+          @selectOption="(option) => setFormProp('anticoagulant', option as IMedicationSchema)"
         />
-        <AppInput width="8rem" title="Объем" placeholder="XXX ед." readonly />
+        <AppInput width="8rem" title="Объем" placeholder="XXX ед." :value="form.anticoagulant ? String(form.anticoagulant?.volume) + form.anticoagulant.unit : undefined" readonly />
       </AppRow>
       <AppRow>
-        <AppButton @click="getSelectOptions('devices', 'concentrators')">Сформировать сеанс</AppButton>
+        <AppButton @click="formIsReady=true">Сформировать сеанс</AppButton>
       </AppRow>
       <AppRow>
         <DialyzeBoard
@@ -107,7 +117,9 @@
           :concentrator="form.concentrator?.volume.toString()"
           :injectionType="form.injectionType?.label"
           :bicarbonate="form.bicarbonate?.label"
+          :anticoagulant="form.anticoagulant?.volume.toString()"
           :weight="form.patientWeight?.toString()"
+          :isReady="formIsReady"
         />
       </AppRow>
     </div>
@@ -120,42 +132,25 @@ import { AppRow } from '@/components/blocks'
 import { AppButton, AppInput, AppSelect } from '@/components/elements'
 import DialyzeBoard from './DialyzeBoard.vue'
 import { useStore } from '@/stores'
-import {
-  type IDialyzeForm,
-  type IDialyzeFormOptions,
-  dialyzeFormOptions
-} from '@/stores/forms/'
-import { getOptions } from '@/stores/forms/form.options'
+import { type IDialyzeForm, } from '@/stores/forms/'
+import { type IDeviceSchema, type IMedicationSchema } from '@/stores/schemas'
+import { formOptions as fo , type IFormOptions } from '@/stores/forms/form.options'
 
 const store = useStore()
 
-const formOptions = ref<IDialyzeFormOptions>(dialyzeFormOptions)
+const formOptions = ref<IFormOptions['dialyze']>(fo.dialyze)
 
 const form = ref<IDialyzeForm>(store.forms.get('dialyze'))
 
-
-function setFormProp<K extends keyof IDialyzeForm>(
-  formProp: K,
-  optionName: keyof Omit<IDialyzeFormOptions, 'categories'>,
-  optionSlug: string
-): void {
-  const newValue = formOptions.value[optionName].find(
-    (o) => o.slug === optionSlug
-  ) as IDialyzeForm[K]
-  if (!newValue) return
-  form.value[formProp] = newValue
-  // store.forms.setFormProp('dialyze', optionSlug, newValue)
-  // console.log(form.value[formProp])
-  console.log(store.forms.get('dialyze'))
-  // appointmentStore.setProp('dialyze', dialyzeForm.value)
+function resetInjectionProps(): void {
+  form.value.injector = undefined
+  form.value.injectorType = undefined
 }
 
-function getSelectOptions(substore: keyof ReturnType<typeof useStore>, key: string) {
-  const options = getOptions(store, substore, key)
-  console.log('[getSelectOptions]: ', options)
-  return options
+function setFormProp<P extends keyof IDialyzeForm>( prop: P, newProp: IDialyzeForm[P], onEnd?: Function): void {
+  form.value[prop] = newProp
+  if(onEnd) onEnd()
 }
 
+const formIsReady = ref<boolean>(false)
 </script>
-
-<style scoped></style>
