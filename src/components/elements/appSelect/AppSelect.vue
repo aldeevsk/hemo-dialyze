@@ -30,7 +30,7 @@ import { AppInput, AppButton } from '@/components/elements'
 import { IconMenu } from '@/components/icons'
 import { type TUnionSchema } from '@/stores/schemas'
 import { useStore } from '@/stores'
-import { type IFormOptions, getOptions } from '@/stores/forms/form.options'
+import { type IFormOptions, getOptions } from '@/forms'
 
 
 const props = defineProps<{
@@ -40,7 +40,7 @@ const props = defineProps<{
   value?: string
   modal: {
     title: string
-    subForm: keyof IFormOptions
+    formPart: keyof IFormOptions
     prop: keyof IFormOptions[keyof IFormOptions] | unknown
   }
 }>()
@@ -63,7 +63,7 @@ const store = useStore()
 
 async function setOptions() {
   const prop = props.modal.prop as keyof IFormOptions[keyof IFormOptions]
-  const options = await getOptions(store, props.modal.subForm, prop)
+  const options = await getOptions(store, props.modal.formPart, prop)
   optionsList.value = options
   modalVisibility.value = true
 }
@@ -77,6 +77,10 @@ function removeOption(id: number) {
   display: grid;
   align-items: center;
   gap: var(--gap-xs);
+}
+.select__title {
+  font-size: var(--font-sm);
+  font-weight: normal;
 }
 .select__body {
   display: flex;

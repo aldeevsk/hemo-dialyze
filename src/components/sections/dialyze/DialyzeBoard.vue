@@ -4,7 +4,7 @@
         <div class="board__body">
             <span class="board__item"><IconMonitor/> {{ props.isReady && props.program || 'Программа'}}</span>
             <span class="board__item"><IconDialyzer/> {{ props.isReady && props.dialyler || 'Диализатор' }}</span>
-            <span class="board__item"><IconConcentrator/> {{ props.isReady && props.concentrator || 'Концентратор объем' }}</span>
+            <span class="board__item"><IconConcentrator/> {{ props.isReady && props.concentrator ? props.concentrator + ' л' : 'Концентратор объем' }}</span>
             <span class="board__item"><IconInject/> {{ props.isReady && props.injectionType || 'Тип иньекции' }}</span>
             <span class="board__item"><IconLab/> {{ props.isReady && props.bicarbonate ? props.bicarbonate + ' мл' : 'Бикарбонат мл' }}</span>
             <span class="board__item"><IconLab/> {{ props.isReady && props.anticoagulant ? props.anticoagulant + ' ед' : 'Антикоагуляция ед.' }}</span>

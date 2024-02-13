@@ -1,33 +1,35 @@
 <template>
-  <div class="search">
+  <div class="add">
     <AppInput
-      class="search__input"
-      placeholder="Поиск позиции по первым символам"
+      class="add__input"
+      placeholder="Добавить новую запись"
     />
-    <AppButton class="search__button"><IconLoupe/></AppButton>
+    <AppButton class="add__button"><IconPlus/></AppButton>
   </div>
 </template>
 
 <script setup lang="ts">
 import { AppInput, AppButton } from '.'
-import { IconLoupe } from '../icons';
+import { IconPlus } from '../icons';
 
 </script>
 <style scoped>
-.search {
+.add {
   height: var(--el-h);
   width: 100%;
   display: flex;
   gap: var(--gap-sm);
 }
-.search__input {
+.add__input {
   flex-grow: 1;
   height: 100%;
 }
-.search__button {
+.add__button {
   border-radius: 0;
   width: 5rem;
-  stroke: rgb(var(--dark));
   padding: 0;
+}
+.add__button:hover {
+  stroke: rgb(var(--accent));
 }
 </style>

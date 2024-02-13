@@ -47,7 +47,7 @@ function emitChange(event: Event): void {
 }
 .input__title {
   font-size: var(--font-sm);
-  font-weight: bold;
+  font-weight: normal;
 }
 .input__element {
   width: 100%;

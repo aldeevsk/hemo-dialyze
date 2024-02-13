@@ -1,5 +1,5 @@
-import type  { IDeviceSchema, IMedicationSchema, IGroupSchema } from '../schemas'
-import { type IStore } from '..'
+import type  { IDeviceSchema, IMedicationSchema, IGroupSchema } from '@/stores/schemas'
+import { type IStore } from '@/stores'
 
 
 type TGetFormPropOtionsMethod = (store: IStore) => IDeviceSchema[] | IMedicationSchema[] | IGroupSchema[]
@@ -47,7 +47,7 @@ export const formOptions: IFormOptions = {
 }
 
 
-export function getOptions(store: IStore, subForm: keyof IFormOptions, prop: keyof IFormOptions[typeof subForm]): any {
-  const option = formOptions[subForm][prop] as TGetFormPropOtionsMethod
+export function getOptions(store: IStore, formPart: keyof IFormOptions, prop: keyof IFormOptions[typeof formPart]): any {
+  const option = formOptions[formPart][prop] as TGetFormPropOtionsMethod
   if (option instanceof Function) return option(store)
 }

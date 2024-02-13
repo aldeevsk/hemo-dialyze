@@ -70,12 +70,3 @@ function findBySlug<K extends keyof ITables>(table: K, slug: string): ITables[K]
 function findById<K extends keyof ITables>(table: K, id: number): ITables[K][number] | void {
   return tables[table].find((entry) => entry.id === id)
 }
-
-// filterTable(table: keyof ITables, {id=-1, slug='', categorySlug='', groupSlug=''}) {
-//   let result = tables[table]
-//   if(id > 0) result = result.filter( row => row.id === id)
-//   if(slug.length > 0) result = result.filter(row => row.slug === slug)
-//   if(categorySlug.length > 0) result = result.filter(row => row.categorySlug === categorySlug )
-//   if(groupSlug.length > 0) result = result.filter(row => row.groupSlug === groupSlug)
-//   return result
-// }

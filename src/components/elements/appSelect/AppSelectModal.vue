@@ -4,6 +4,8 @@
       <div class="select-modal__header">
         <h3 class="select-modal__title">{{ props.title }}</h3>
         <AppButton @click="emit('clickOnClose')">Закрыть</AppButton>
+        <AppSearch/>
+        <AppAddItem/>
       </div>
       <div class="select-modal__body" v-if="props.options.length">
         <div class="select-modal__option" v-for="option in props.options" :key="option.id">
@@ -27,7 +29,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AppButton } from '..'
+import { AppButton, AppSearch, AppAddItem } from '..'
 import type { TUnionSchema } from '@/stores/schemas'
 import { IconDelete, IconAngleRight } from '@/components/icons'
 
@@ -101,7 +103,8 @@ function selectOption(option: TUnionSchema) {
   border: none;
   border-color: var(--dark);
   border-radius: 0;
-  padding: 0 var(--gap-sm);
+  width: 5rem;
+  padding: 0;
 }
 .select-modal__option-button:last-child {
   border-left: var(--border);

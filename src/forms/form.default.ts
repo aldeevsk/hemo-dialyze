@@ -33,7 +33,7 @@ interface IAthomeForm {}
 
 const athomeForm: IAthomeForm = {}
 
-interface IForm {
+export interface IForm {
     dialyze: IDialyzeForm
     recipes: IRecipesForm
     athome: IAthomeForm
@@ -45,21 +45,16 @@ export const form = ref<IForm>({
   athome: athomeForm
 })
 
-interface ISetFormOptions<SF extends keyof IForm> {
-  prop: keyof IForm[SF]
-  newValue: IForm[SF][keyof IForm[SF]]
+interface ISetFormOptions<P extends keyof IForm> {
+  prop: keyof IForm[P]
+  newValue: IForm[P][keyof IForm[P]]
   onEnd?: Function
 }
 
-function setFormProp<SF extends keyof IForm>( subform: SF, options: ISetFormOptions<SF>): void {
+export function setFormProp<P extends keyof IForm>( formPart: P, options: ISetFormOptions<P>): void {
   const { prop, newValue, onEnd } = options
-  form.value[subform][prop] = newValue
+  form.value[formPart][prop] = newValue
   if(onEnd) onEnd()
 }
 
-setFormProp('dialyze', { prop: 'program', newValue: {id: 1, slug: 'hd', label: 'HD'}})
-
-// function setFormProp<SF extends keyof IForm>( subform: SF, prop: keyof IForm[SF], newProp: IForm[SF][typeof prop], onEnd?: Function): void {
-//   form.value[subform][prop] = newProp
-//   if(onEnd) onEnd()
-// }
+// setFormProp('dialyze', { prop: 'program', newValue: {id: 1, slug: 'hd', label: 'HD'}})

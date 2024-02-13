@@ -90,5 +90,41 @@ export const devices: IDeviceSchema[] = [
     unit: 'л',
     categorySlug: 'needles',
     groupSlug: 'needles'
-  }
+  },
+  {
+    id: 11,
+    slug: 'catheter-1',
+    label: 'Катетер-1',
+    volume: 100,
+    unit: 'мл',
+    categorySlug: 'catheters',
+    groupSlug: 'catheter-foley'
+  },
+  {
+    id: 12,
+    slug: 'catheter-2',
+    label: 'Катетер-2',
+    volume: 100,
+    unit: 'мл',
+    categorySlug: 'catheters',
+    groupSlug: 'catheter-maleko'
+  },
+  {
+    id: 13,
+    slug: 'catheter-3',
+    label: 'Катетер-3',
+    volume: 100,
+    unit: 'мл',
+    categorySlug: 'catheters',
+    groupSlug: 'catheter-foley'
+  },
+  {
+    id: 14,
+    slug: 'catheter-4',
+    label: 'Катетер-4',
+    volume: 100,
+    unit: 'мл',
+    categorySlug: 'catheters',
+    groupSlug: 'catheter-foley'
+  },
 ]

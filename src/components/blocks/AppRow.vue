@@ -22,7 +22,7 @@ const props = defineProps<{
 }
 .row__title {
   font-weight: normal;
-  font-size: var(--font-md);
+  font-size: var(--font-sm);
 }
 .row__body {
   display: flex;
